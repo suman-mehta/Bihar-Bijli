@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>बिहार बिजली स्टेटस ऐप</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --danger: #f72585;
+            --success: #4cc9f0; 
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --telegram: #0088cc;
+            --bg-gradient-start: #1a2a6c;
+            --bg-gradient-mid: #b21f1f;
+            --bg-gradient-end: #1a2a6c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-mid), var(--bg-gradient-end));
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .login-form, .profile-edit-form, .otp-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .login-form h3, .profile-edit-form h3, .otp-section h3 {
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            font-size: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn-login, .btn-primary {
+            background: linear-gradient(135deg, var(--telegram), #006699);
+            color: white;
+        }
+        
+        .btn-login:hover:not([disabled]), .btn-primary:hover:not([disabled]) {
+            background: linear-gradient(135deg, #0077b3, #004466);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 136, 204, 0.4);
+        }
+
+        .btn-cancel {
+            background: linear-gradient(135deg, var(--gray), #5a6268);
+            color: white;
+        }
+        .btn-cancel:hover:not([disabled]) {
+            background: linear-gradient(135deg, #5a6268, #495057);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+        
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--success));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            flex-shrink: 0;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .file-input-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            border-radius: 50%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .user-avatar::after {
+            content: "\f030";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 4px;
+            font-size: 12px;
+            border-top-left-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 0;
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .user-info h3 {
+            margin: 0;
+            font-size: 20px;
+            color: white;
+        }
+        
+        .user-info p {
+            margin: 5px 0 0;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+        
+        .status-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .btn-action {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-on {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+        }
+        
+        .btn-on:hover:not([disabled]) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-off {
+            background: linear-gradient(135deg, #f44336, #c62828);
+            color: white;
+        }
+        
+        .btn-off:hover:not([disabled]) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(244, 67, 54, 0.4);
+        }
+        
+        .status-updates {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .status-updates h3 {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-list {
+            max-height: 300px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+        }
+
+        .status-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .status-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .status-list::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+        }
+        
+        .status-card {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+        
+        .status-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .status-card:last-child {
+            border-bottom: none;
+        }
+        
+        .status-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .status-on .status-icon {
+            background-color: rgba(76, 201, 240, 0.2);
+            color: #4CAF50;
+        }
+        
+        .status-off .status-icon {
+            background-color: rgba(247, 37, 133, 0.2);
+            color: #f44336;
+        }
+        
+        .status-content {
+            flex: 1;
+        }
+        
+        .status-location {
+            font-weight: 600;
+            margin-bottom: 3px;
+            color: white;
+            word-break: break-all;
+        }
+        
+        .status-message {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+        
+        .status-time {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            text-align: right;
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+        
+        .no-updates {
+            padding: 30px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .permission-btn, .logout-btn, .edit-profile-btn, .resend-otp-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .permission-btn:hover:not([disabled]), .logout-btn:hover:not([disabled]), .edit-profile-btn:hover:not([disabled]), .resend-otp-btn:hover:not([disabled]) {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        .permission-btn:disabled, .logout-btn:disabled, .edit-profile-btn:disabled, .resend-otp-btn:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .logout-btn {
+            background-color: var(--danger);
+            margin-left: 10px;
+        }
+
+        .logout-btn:hover {
+            background-color: #c62828;
+        }
+
+        .edit-profile-btn {
+            background: #0088cc;
+            margin-left: 10px;
+        }
+        .edit-profile-btn:hover {
+            background-color: #0077b3;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .telegram-credit {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+        
+        .telegram-credit a {
+            color: #0088cc;
+            text-decoration: none;
+        }
+        
+        .telegram-credit a:hover {
+            text-decoration: underline;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.4s ease-out;
+            z-index: 1000;
+            max-width: 350px;
+            min-width: 250px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .notification-success {
+            background-color: var(--primary);
+        }
+        
+        .notification-error {
+            background-color: var(--danger);
+        }
+
+        .notification-info {
+            background-color: #17a2b8;
+        }
+
+        /* Offline Indicator */
+        .offline-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background: var(--danger);
+            color: white;
+            border-radius: 5px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transform: translateY(100px);
+            transition: transform 0.3s ease;
+        }
+        
+        .offline-indicator.show {
+            transform: translateY(0);
+        }
+        
+        /* Battery Indicator */
+        .battery-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.5);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .battery-low {
+            color: #ff6b6b;
+        }
+        
+        .battery-medium {
+            color: #ffd166;
+        }
+        
+        .battery-high {
+            color: #06d6a0;
+        }
+
+        /* CAPTCHA Styles */
+        .captcha-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        #captchaCanvas {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+        }
+        
+        #refreshCaptchaBtn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        #refreshCaptchaBtn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        #captchaInput {
+            flex-grow: 1;
+        }
+
+        #otpResendTimer {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn-action {
+                padding: 14px;
+            }
+            
+            .header h1 {
+                font-size: 26px;
+            }
+            
+            .notification {
+                max-width: 90%;
+                right: 5%;
+                left: 5%;
+                margin: 0 auto;
+            }
+
+            .user-profile {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .user-info {
+                width: 100%;
+                margin-top: 15px;
+            }
+            .user-info button {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .captcha-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            #captchaCanvas {
+                width: 100%;
+                height: 50px;
+            }
+            #refreshCaptchaBtn {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="battery-indicator" id="batteryIndicator">
+            <i class="fas fa-battery-full"></i>
+            <span id="batteryLevel">100%</span>
+        </div>
+        
+        <div class="header">
+            <h1><i class="fas fa-bolt"></i> बिहार बिजली स्टेटस ऐप</h1>
+            <p>अपने क्षेत्र में बिजली की स्थिति की जानकारी दें और रियल-टाइम अपडेट प्राप्त करें</p>
+        </div>
+        
+        <div id="loginSection">
+            <div class="login-form">
+                <h3><i class="fas fa-sign-in-alt"></i> लॉगिन / रजिस्टर करें</h3>
+                <div class="form-group">
+                    <label for="userName"><i class="fas fa-user"></i> पूरा नाम</label>
+                    <input type="text" id="userName" class="form-control" placeholder="अपना पूरा नाम दर्ज करें">
+                </div>
+                
+                <div class="form-group">
+                    <label for="mobileNumber"><i class="fas fa-mobile-alt"></i> मोबाइल नंबर</label>
+                    <input type="tel" id="mobileNumber" class="form-control" placeholder="अपना 10-अंकीय मोबाइल नंबर दर्ज करें">
+                </div>
+
+                <div class="form-group">
+                    <label for="captchaInput"><i class="fas fa-robot"></i> CAPTCHA सत्यापन</label>
+                    <div class="captcha-container">
+                        <canvas id="captchaCanvas" width="120" height="40"></canvas>
+                        <button id="refreshCaptchaBtn">
+                            <i class="fas fa-sync-alt"></i> नया CAPTCHA
+                        </button>
+                        <input type="text" id="captchaInput" class="form-control" placeholder="CAPTCHA दर्ज करें">
+                    </div>
+                </div>
+
+                <button class="btn btn-login" id="loginRegisterBtn">
+                    <i class="fas fa-sign-in-alt"></i> आगे बढ़ें
+                </button>
+            </div>
+        </div>
+
+        <div id="otpSection" class="hidden">
+            <div class="otp-section">
+                <h3><i class="fas fa-unlock-alt"></i> OTP सत्यापन</h3>
+                <p style="color: rgba(255,255,255,0.9); margin-bottom: 20px;">आपके मोबाइल नंबर <strong id="otpMobileDisplay"></strong> पर एक OTP भेजा गया है।</p>
+                <div class="form-group">
+                    <label for="otpInput"><i class="fas fa-key"></i> OTP दर्ज करें</label>
+                    <input type="text" id="otpInput" class="form-control" placeholder="6-अंकीय OTP दर्ज करें">
+                </div>
+                <button class="btn btn-primary" id="verifyOtpBtn">
+                    <i class="fas fa-check-circle"></i> OTP वेरिफाई करें
+                </button>
+                <button class="resend-otp-btn" id="resendOtpBtn" disabled style="margin-top: 15px;">
+                    <i class="fas fa-paper-plane"></i> OTP दोबारा भेजें (<span id="otpResendTimer">60s</span>)
+                </button>
+            </div>
+        </div>
+        
+        <div id="appSection" class="hidden">
+            <div class="user-profile" id="userProfile">
+                <div class="user-avatar" id="userAvatar">
+                    <div class="file-input-wrapper">
+                        <input type="file" id="profileFileInput" accept="image/*">
+                    </div>
+                    U
+                </div>
+                <div class="user-info">
+                    <h3 id="displayName">यूजर</h3>
+                    <p id="userMobile">मोबाइल: डेटा नहीं</p>
+                    <p id="userLocation">स्थान: अनुमति का इंतजार है...</p>
+                    <button class="permission-btn" id="locationPermissionBtn">
+                        <i class="fas fa-location-arrow"></i> लोकेशन एक्सेस दें
+                    </button>
+                    <button class="edit-profile-btn" id="editProfileBtn">
+                        <i class="fas fa-edit"></i> प्रोफाइल एडिट करें
+                    </button>
+                    <button class="logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> लॉगआउट करें
+                    </button>
+                </div>
+            </div>
+            
+            <div class="status-form">
+                <h3><i class="fas fa-power-off"></i> बिजली स्थिति अपडेट करें</h3>
+                <div class="btn-group">
+                    <button class="btn-action btn-on" id="powerOnBtn">
+                        <i class="fas fa-bolt"></i> बिजली आ गई
+                    </button>
+                    <button class="btn-action btn-off" id="powerOffBtn">
+                        <i class="fas fa-power-off"></i> बिजली चली गई
+                    </button>
+                </div>
+            </div>
+            
+            <div class="status-updates">
+                <h3><i class="fas fa-history"></i> हाल के अपडेट्स</h3>
+                <div class="status-list" id="statusUpdates">
+                    <div class="no-updates">
+                        <i class="fas fa-info-circle" style="font-size: 24px; margin-bottom: 10px;"></i>
+                        <p>कोई अपडेट उपलब्ध नहीं है</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="profileEditSection" class="hidden">
+            <div class="profile-edit-form">
+                <h3><i class="fas fa-edit"></i> प्रोफाइल एडिट करें</h3>
+                <div class="form-group">
+                    <label for="editUserName"><i class="fas fa-user"></i> नाम</label>
+                    <input type="text" id="editUserName" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="editMobileNumber"><i class="fas fa-mobile-alt"></i> मोबाइल नंबर</label>
+                    <input type="tel" id="editMobileNumber" class="form-control">
+                </div>
+                
+                <button class="btn btn-primary" id="saveProfileBtn">
+                    <i class="fas fa-save"></i> प्रोफाइल सेव करें
+                </button>
+                <button class="btn btn-cancel" id="cancelEditProfileBtn" style="margin-top: 15px;">
+                    <i class="fas fa-times"></i> कैंसिल
+                </button>
+            </div>
+        </div>
+        
+        <div class="telegram-credit">
+            <p>सभी अपडेट्स आपके टेलीग्राम बॉट पर भेजे जाते हैं | <a href="#" id="privacyLink">गोपनीयता नीति</a></p>
+        </div>
+    </div>
+
+    <div class="offline-indicator" id="offlineIndicator">
+        <i class="fas fa-wifi-slash"></i> आप ऑफ़लाइन हैं! अपडेट सहेजे जा रहे हैं...
+    </div>
+
+    <script>
+        // --- Telegram Bot API Credentials ---
+        const TELEGRAM_BOT_TOKEN = '7461477449:AAHYcS07w71_FXMbPR0FS-flMcZrduiT8NU'; // आपका बॉट टोकन
+        const TELEGRAM_CHAT_ID = '5716658945'; // आपकी चैट आईडी
+        
+        // Current user data
+        let currentUser = {
+            name: '',
+            mobile: '',
+            location: 'स्थान: अनुमति का इंतजार है...', 
+            latitude: null, 
+            longitude: null, 
+            userId: '',
+            profilePicture: null, 
+            authToken: null
+        };
+        
+        // App state
+        let statusUpdates = [];
+        let isOnline = navigator.onLine;
+        let lastUpdateTime = 0;
+        const UPDATE_COOLDOWN = 5 * 60 * 1000; // 5 minutes cooldown
+
+        // CAPTCHA variables
+        let captchaText = '';
+        const captchaCanvas = document.getElementById('captchaCanvas');
+        const captchaCtx = captchaCanvas.getContext('2d');
+
+        // OTP variables
+        let generatedOtp = '';
+        const OTP_RESEND_COOLDOWN = 60; // seconds
+        let otpTimerInterval;
+
+        // DOM Elements
+        const loginSection = document.getElementById('loginSection');
+        const otpSection = document.getElementById('otpSection'); // New OTP section
+        const appSection = document.getElementById('appSection');
+        const offlineIndicator = document.getElementById('offlineIndicator');
+        const batteryIndicator = document.getElementById('batteryIndicator');
+        const batteryLevel = document.getElementById('batteryLevel');
+
+        const userNameInput = document.getElementById('userName');
+        const mobileInput = document.getElementById('mobileNumber');
+        const captchaInput = document.getElementById('captchaInput');
+        const refreshCaptchaBtn = document.getElementById('refreshCaptchaBtn');
+        const loginRegisterBtn = document.getElementById('loginRegisterBtn');
+
+        const otpMobileDisplay = document.getElementById('otpMobileDisplay');
+        const otpInput = document.getElementById('otpInput');
+        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+        const resendOtpBtn = document.getElementById('resendOtpBtn');
+        const otpResendTimerDisplay = document.getElementById('otpResendTimer');
+
+        const displayName = document.getElementById('displayName');
+        const userMobile = document.getElementById('userMobile');
+        const userLocation = document.getElementById('userLocation');
+        const locationPermissionBtn = document.getElementById('locationPermissionBtn');
+        const powerOnBtn = document.getElementById('powerOnBtn');
+        const powerOffBtn = document.getElementById('powerOffBtn');
+        const statusUpdatesElement = document.getElementById('statusUpdates');
+        const userAvatar = document.getElementById('userAvatar');
+        const privacyLink = document.getElementById('privacyLink');
+        const logoutBtn = document.getElementById('logoutBtn'); 
+        const profileFileInput = document.getElementById('profileFileInput'); 
+
+        const profileEditSection = document.getElementById('profileEditSection');
+        const editProfileBtn = document.getElementById('editProfileBtn');
+        const editUserNameInput = document.getElementById('editUserName');
+        const editMobileNumberInput = document.getElementById('editMobileNumber');
+        const saveProfileBtn = document.getElementById('saveProfileBtn');
+        const cancelEditProfileBtn = document.getElementById('cancelEditProfileBtn');
+
+        // Initialize the app
+        function initApp() {
+            checkNetworkStatus();
+            checkBatteryStatus();
+            
+            window.addEventListener('online', () => {
+                isOnline = true;
+                offlineIndicator.classList.remove('show');
+                showNotification('आपका कनेक्शन बहाल किया गया है', 'success');
+                sendPendingUpdates(); // पेंडिंग अपडेट्स भेजें
+            });
+            
+            window.addEventListener('offline', () => {
+                isOnline = false;
+                offlineIndicator.classList.add('show');
+                showNotification('आप ऑफ़लाइन हैं! अपडेट सहेजे जा रहे हैं', 'info');
+            });
+            
+            const savedUser = localStorage.getItem('powerAppUser');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    const savedAuthToken = localStorage.getItem('authToken');
+                    if (savedAuthToken) {
+                        currentUser.authToken = savedAuthToken;
+                    }
+                    showAppSection();
+                    // अगर पहले से ही अक्षांश/देशांतर हैं, तो पता दोबारा प्राप्त करने की कोशिश करें
+                    if (currentUser.latitude && currentUser.longitude) {
+                        // `handleLocationSuccess` को सीधे कॉल करें, लेकिन position ऑब्जेक्ट को नकली करें
+                        handleLocationSuccess({ coords: { latitude: currentUser.latitude, longitude: currentUser.longitude } });
+                    }
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                    localStorage.removeItem('powerAppUser');
+                    showLoginSection();
+                }
+            } else {
+                showLoginSection(); 
+            }
+            
+            // Event listeners
+            loginRegisterBtn.addEventListener('click', handleLoginRegister);
+            refreshCaptchaBtn.addEventListener('click', generateCaptcha);
+            verifyOtpBtn.addEventListener('click', handleOtpVerification);
+            resendOtpBtn.addEventListener('click', resendOtp);
+            locationPermissionBtn.addEventListener('click', requestLocationPermission);
+            powerOnBtn.addEventListener('click', () => updatePowerStatus('ON'));
+            powerOffBtn.addEventListener('click', () => updatePowerStatus('OFF'));
+            privacyLink.addEventListener('click', showPrivacyPolicy);
+            logoutBtn.addEventListener('click', handleLogout);
+            
+            if (profileFileInput) {
+                profileFileInput.addEventListener('change', handleProfilePictureUpload); 
+            }
+
+            editProfileBtn.addEventListener('click', showProfileEditSection);
+            saveProfileBtn.addEventListener('click', handleProfileSave);
+            cancelEditProfileBtn.addEventListener('click', () => showAppSection());
+
+            generateCaptcha(); // Generate initial CAPTCHA
+        }
+
+        // Check network status
+        function checkNetworkStatus() {
+            isOnline = navigator.onLine;
+            if (!isOnline) {
+                offlineIndicator.classList.add('show');
+            }
+        }
+
+        // Check device battery status
+        function checkBatteryStatus() {
+            if ('getBattery' in navigator) {
+                navigator.getBattery().then(battery => {
+                    updateBatteryUI(battery.level * 100);
+                    
+                    battery.addEventListener('levelchange', () => {
+                        updateBatteryUI(battery.level * 100);
+                    });
+                    
+                    battery.addEventListener('chargingchange', () => {
+                        updateBatteryUI(battery.level * 100);
+                    });
+                });
+            }
+        }
+        
+        // Update battery UI
+        function updateBatteryUI(level) {
+            batteryLevel.textContent = `${Math.round(level)}%`;
+            
+            // Update battery icon
+            let batteryIcon = 'fa-battery-full';
+            if (level > 75) {
+                batteryIcon = 'fa-battery-full';
+                batteryIndicator.className = 'battery-indicator battery-high';
+            } else if (level > 25) {
+                batteryIcon = 'fa-battery-half';
+                batteryIndicator.className = 'battery-indicator battery-medium';
+            } else {
+                batteryIcon = 'fa-battery-quarter';
+                batteryIndicator.className = 'battery-indicator battery-low';
+            }
+            
+            batteryIndicator.innerHTML = `<i class="fas ${batteryIcon}"></i> <span id="batteryLevel">${Math.round(level)}%</span>`;
+        }
+        
+        // Send pending updates when coming online
+        async function sendPendingUpdates() {
+            const pendingUpdates = JSON.parse(localStorage.getItem('pendingUpdates') || '[]');
+            if (pendingUpdates.length > 0) {
+                showNotification(`पेंडिंग अपडेट्स भेज रहा हूँ... (${pendingUpdates.length} बाकी)`, 'info');
+                let sentCount = 0;
+                const totalUpdates = pendingUpdates.length;
+
+                for (const update of pendingUpdates) {
+                    const success = await sendToTelegram(update.message, update.type, true); // `isPending` true
+                    if (success) {
+                        sentCount++;
+                    }
+                }
+                
+                if (sentCount === totalUpdates) {
+                    localStorage.removeItem('pendingUpdates');
+                    showNotification(`${totalUpdates} अपडेट सफलतापूर्वक सिंक किए गए`, 'success');
+                } else if (sentCount > 0) {
+                    // अगर कुछ भेजे गए और कुछ नहीं, तो जो नहीं भेजे गए उन्हें वापस सेव करें
+                    const unsentUpdates = pendingUpdates.slice(sentCount);
+                    localStorage.setItem('pendingUpdates', JSON.stringify(unsentUpdates));
+                    showNotification(`${sentCount} अपडेट सिंक किए गए, ${totalUpdates - sentCount} अपडेट भेजने में विफल।`, 'error');
+                }
+            }
+        }
+
+        // --- CAPTCHA Functions ---
+        function generateCaptcha() {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            captchaText = code;
+            
+            captchaCtx.clearRect(0, 0, captchaCanvas.width, captchaCanvas.height);
+            captchaCtx.font = '24px "Comic Sans MS"';
+            captchaCtx.fillStyle = 'white';
+            captchaCtx.textAlign = 'center';
+            captchaCtx.textBaseline = 'middle';
+            
+            // Add background noise
+            captchaCtx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+            for (let i = 0; i < 50; i++) {
+                captchaCtx.beginPath();
+                captchaCtx.arc(Math.random() * captchaCanvas.width, Math.random() * captchaCanvas.height, Math.random() * 2, 0, Math.PI * 2);
+                captchaCtx.fill();
+            }
+
+            // Draw text with distortions
+            for (let i = 0; i < code.length; i++) {
+                captchaCtx.fillStyle = `hsl(${Math.random() * 360}, 100%, 75%)`; // Random color
+                captchaCtx.font = `${20 + Math.random() * 10}px "Comic Sans MS"`; // Random font size
+                captchaCtx.save();
+                captchaCtx.translate(
+                    (i + 0.5) * (captchaCanvas.width / code.length) + (Math.random() - 0.5) * 5, // Random X offset
+                    captchaCanvas.height / 2 + (Math.random() - 0.5) * 5 // Random Y offset
+                );
+                captchaCtx.rotate((Math.random() - 0.5) * 0.5); // Random rotation
+                captchaCtx.fillText(code[i], 0, 0);
+                captchaCtx.restore();
+            }
+
+            // Add lines
+            for (let i = 0; i < 2; i++) {
+                captchaCtx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+                captchaCtx.lineWidth = 1 + Math.random() * 2;
+                captchaCtx.beginPath();
+                captchaCtx.moveTo(0, Math.random() * captchaCanvas.height);
+                captchaCtx.lineTo(captchaCanvas.width, Math.random() * captchaCanvas.height);
+                captchaCtx.stroke();
+            }
+        }
+        
+        function verifyCaptcha(input) {
+            return input.toLowerCase() === captchaText.toLowerCase();
+        }
+
+        // --- OTP Functions ---
+        function generateOtp() {
+            return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+        }
+
+        function startOtpTimer() {
+            let timeLeft = OTP_RESEND_COOLDOWN;
+            resendOtpBtn.disabled = true;
+            otpResendTimerDisplay.textContent = `${timeLeft}s`;
+
+            otpTimerInterval = setInterval(() => {
+                timeLeft--;
+                otpResendTimerDisplay.textContent = `${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(otpTimerInterval);
+                    resendOtpBtn.disabled = false;
+                    otpResendTimerDisplay.textContent = 'भेजें';
+                }
+            }, 1000);
+        }
+
+        async function sendOtpToUser(mobile) {
+            generatedOtp = generateOtp();
+            const otpMessage = `आपका बिहार बिजली स्टेटस ऐप OTP है: ${generatedOtp}. इसे किसी के साथ साझा न करें।`;
+            const success = await sendToTelegram(otpMessage, 'OTP', false); // No pending for OTP
+            if (success) {
+                showNotification(`OTP सफलतापूर्वक ${mobile} पर भेजा गया।`, 'success');
+                startOtpTimer();
+            } else {
+                showNotification('OTP भेजने में विफल। कृपया पुनः प्रयास करें।', 'error');
+                // अगर OTP भेजने में विफल, तो लॉगिन बटन को फिर से सक्षम करें
+                loginRegisterBtn.disabled = false;
+                loginRegisterBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> आगे बढ़ें';
+            }
+            return success;
+        }
+
+        async function handleOtpVerification() {
+            const enteredOtp = otpInput.value.trim();
+
+            if (!enteredOtp) {
+                showNotification('कृपया OTP दर्ज करें।', 'error');
+                return;
+            }
+            if (enteredOtp !== generatedOtp) {
+                showNotification('अमान्य OTP। कृपया पुनः प्रयास करें।', 'error');
+                return;
+            }
+
+            verifyOtpBtn.disabled = true;
+            verifyOtpBtn.innerHTML = '<div class="spinner"></div> वेरिफाई हो रहा है...';
+
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+
+                currentUser.userId = generateUserId();
+                currentUser.authToken = 'mock_auth_token_' + btoa(currentUser.mobile); // एक डमी ऑथ टोकन
+                localStorage.setItem('powerAppUser', JSON.stringify(currentUser));
+                localStorage.setItem('authToken', currentUser.authToken);
+
+                showNotification('सफलतापूर्वक लॉगिन/रजिस्टर किया गया!', 'success');
+                clearInterval(otpTimerInterval); // Stop timer on successful verification
+                showAppSection();
+
+            } catch (error) {
+                console.error('Error during OTP verification:', error);
+                showNotification('OTP सत्यापन में त्रुटि हुई। कृपया पुनः प्रयास करें।', 'error');
+            } finally {
+                verifyOtpBtn.disabled = false;
+                verifyOtpBtn.innerHTML = '<i class="fas fa-check-circle"></i> OTP वेरिफाई करें';
+            }
+        }
+
+        async function resendOtp() {
+            resendOtpBtn.disabled = true;
+            resendOtpBtn.innerHTML = '<div class="spinner"></div> भेज रहा है...';
+            
+            const success = await sendOtpToUser(currentUser.mobile);
+            if (success) {
+                otpInput.value = ''; // Clear OTP input on resend
+            }
+            resendOtpBtn.innerHTML = '<i class="fas fa-paper-plane"></i> OTP दोबारा भेजें (<span id="otpResendTimer">60s</span>)';
+        }
+
+        // --- Login/Register Handler ---
+        async function handleLoginRegister() {
+            const name = userNameInput.value.trim();
+            const mobile = mobileInput.value.trim();
+            const captcha = captchaInput.value.trim();
+            
+            if (!name || !mobile || !captcha) {
+                showNotification('कृपया सभी फ़ील्ड भरें।', 'error');
+                return;
+            }
+            
+            if (!/^[a-zA-Zअ-ह\s]{3,}$/.test(name)) {
+                showNotification('कृपया वैध नाम दर्ज करें (केवल अक्षर और रिक्त स्थान, कम से कम 3 वर्ण)', 'error');
+                return;
+            }
+            
+            if (!/^[6-9]\d{9}$/.test(mobile)) {
+                showNotification('कृपया वैध 10-अंकीय मोबाइल नंबर दर्ज करें (6,7,8,9 से शुरू)।', 'error');
+                return;
+            }
+
+            if (!verifyCaptcha(captcha)) {
+                showNotification('अमान्य CAPTCHA। कृपया पुनः प्रयास करें।', 'error');
+                generateCaptcha(); // Generate new CAPTCHA on failure
+                captchaInput.value = '';
+                return;
+            }
+
+            loginRegisterBtn.disabled = true;
+            loginRegisterBtn.innerHTML = '<div class="spinner"></div> OTP भेज रहा है...';
+
+            currentUser.name = name;
+            currentUser.mobile = mobile;
+
+            const otpSent = await sendOtpToUser(mobile);
+
+            if (otpSent) {
+                otpMobileDisplay.textContent = mobile;
+                showOtpSection();
+            } else {
+                loginRegisterBtn.disabled = false;
+                loginRegisterBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> आगे बढ़ें';
+                generateCaptcha(); // Regenerate captcha if OTP sending failed
+                captchaInput.value = '';
+            }
+        }
+
+        // --- Section Visibility Functions ---
+        function showLoginSection() {
+            loginSection.classList.remove('hidden');
+            otpSection.classList.add('hidden');
+            appSection.classList.add('hidden');
+            profileEditSection.classList.add('hidden');
+            userNameInput.value = ''; 
+            mobileInput.value = '';
+            captchaInput.value = '';
+            generateCaptcha(); // Ensure new CAPTCHA on login view
+            clearInterval(otpTimerInterval); // Clear any running timer
+        }
+
+        function showOtpSection() {
+            loginSection.classList.add('hidden');
+            otpSection.classList.remove('hidden');
+            appSection.classList.add('hidden');
+            profileEditSection.classList.add('hidden');
+            otpInput.value = ''; // Clear OTP input
+        }
+        
+        function showAppSection() {
+            loginSection.classList.add('hidden');
+            otpSection.classList.add('hidden');
+            appSection.classList.remove('hidden');
+            profileEditSection.classList.add('hidden');
+            
+            displayName.textContent = currentUser.name;
+            userMobile.textContent = `मोबाइल: ${currentUser.mobile}`;
+            
+            if (currentUser.profilePicture) {
+                userAvatar.innerHTML = `
+                    <div class="file-input-wrapper">
+                        <input type="file" id="profileFileInput" accept="image/*">
+                    </div>
+                    <img src="${currentUser.profilePicture}" alt="Profile Picture">
+                `;
+            } else {
+                userAvatar.innerHTML = `
+                    <div class="file-input-wrapper">
+                        <input type="file" id="profileFileInput" accept="image/*">
+                    </div>
+                    ${currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U'}
+                `;
+            }
+            
+            const newProfileFileInput = document.getElementById('profileFileInput');
+            if (newProfileFileInput) {
+                newProfileFileInput.addEventListener('change', handleProfilePictureUpload);
+            }
+
+            if (currentUser.latitude && currentUser.longitude && currentUser.location !== 'स्थान: अनुमति का इंतजार है...' && !currentUser.location.includes('(पता नहीं मिला)')) {
+                userLocation.textContent = `स्थान: ${currentUser.location}`;
+                locationPermissionBtn.style.display = 'none'; 
+            } else {
+                userLocation.textContent = 'स्थान: अनुमति का इंतजार है...';
+                locationPermissionBtn.style.display = 'block'; 
+            }
+            
+            loadStatusUpdates();
+        }
+
+        function showProfileEditSection() {
+            appSection.classList.add('hidden');
+            profileEditSection.classList.remove('hidden');
+
+            editUserNameInput.value = currentUser.name;
+            editMobileNumberInput.value = currentUser.mobile;
+        }
+
+        // --- Utility Functions ---
+
+        // Convert Base64 to Blob (currently unused but good to keep if needed)
+        function dataURLtoBlob(dataurl) {
+            const arr = dataurl.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], { type: mime });
+        }
+
+        // Handle profile picture upload
+        async function handleProfilePictureUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 2 * 1024 * 1024) { // 2MB limit
+                showNotification('फ़ाइल का आकार 2MB से अधिक नहीं होना चाहिए।', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const imgData = e.target.result;
+                currentUser.profilePicture = imgData;
+                localStorage.setItem('powerAppUser', JSON.stringify(currentUser));
+                showAppSection();
+                showNotification('प्रोफाइल फोटो अपडेट की गई!', 'success');
+            };
+            reader.readAsDataURL(file); 
+        }
+        
+        // Generate unique user ID
+        function generateUserId() {
+            return 'USER_' + Math.random().toString(36).substr(2, 8).toUpperCase() + Date.now();
+        }
+        
+        // Request location permission
+        function requestLocationPermission() {
+            if (!navigator.geolocation) {
+                userLocation.textContent = 'स्थान: आपका ब्राउज़र लोकेशन सपोर्ट नहीं करता।';
+                locationPermissionBtn.style.display = 'none'; 
+                showNotification('आपका ब्राउज़र जियोलोकेशन का समर्थन नहीं करता है।', 'error');
+                return;
+            }
+
+            locationPermissionBtn.innerHTML = '<div class="spinner"></div> लोकेशन प्राप्त की जा रही है...';
+            locationPermissionBtn.disabled = true;
+            
+            navigator.geolocation.getCurrentPosition(
+                position => handleLocationSuccess(position),
+                error => handleLocationError(error),
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        }
+        
+        // Handle successful location retrieval
+        async function handleLocationSuccess(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            
+            currentUser.latitude = latitude;
+            currentUser.longitude = longitude;
+            
+            // Nominatim API का उपयोग करके पता प्राप्त करें
+            try {
+                // Nominatim API के लिए User-Agent हेडर ज़रूरी है
+                const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
+                const response = await fetch(nominatimUrl, {
+                    headers: {
+                        'User-Agent': 'BiharBijliStatusApp/1.0 (apna.email@example.com)' // **यहां अपनी ईमेल आईडी डालें**
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                if (data && data.display_name) {
+                    currentUser.location = data.display_name; // पूरा पता सेट करें
+                } else {
+                    currentUser.location = `Lat ${latitude.toFixed(4)}, Lng ${longitude.toFixed(4)} (पता नहीं मिला)`;
+                }
+            } catch (error) {
+                console.error('रिवर्स जियोकोडिंग में त्रुटि:', error);
+                currentUser.location = `Lat ${latitude.toFixed(4)}, Lng ${longitude.toFixed(4)} (पता प्राप्त नहीं हुआ)`;
+                showNotification('स्थान का पता प्राप्त करने में त्रुटि हुई।', 'error');
+            }
+
+            userLocation.textContent = `स्थान: ${currentUser.location}`;
+            locationPermissionBtn.style.display = 'none'; 
+            
+            localStorage.setItem('powerAppUser', JSON.stringify(currentUser));
+            
+            showNotification('स्थान सफलतापूर्वक प्राप्त किया गया!', 'success');
+            
+            locationPermissionBtn.disabled = false;
+            locationPermissionBtn.innerHTML = '<i class="fas fa-location-arrow"></i> लोकेशन एक्सेस दें';
+        }
+        
+        // Handle location error
+        function handleLocationError(error) {
+            console.error('Location error:', error);
+            let errorMessage = '';
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = "आपने लोकेशन एक्सेस की अनुमति नहीं दी।";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = "लोकेशन की जानकारी उपलब्ध नहीं है।";
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = "लोकेशन प्राप्त करने में समय समाप्त हो गया।";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    errorMessage = "एक अज्ञात त्रुटि हुई।";
+                    break;
+            }
+            userLocation.textContent = `स्थान: ${errorMessage}`;
+            locationPermissionBtn.innerHTML = '<i class="fas fa-location-arrow"></i> फिर से कोशिश करें';
+            locationPermissionBtn.disabled = false;
+            showNotification(`स्थान प्राप्त करने में त्रुटि हुई: ${errorMessage}`, 'error');
+        }
+        
+        // Update power status
+        async function updatePowerStatus(status) {
+            const currentTime = Date.now();
+            if (currentTime - lastUpdateTime < UPDATE_COOLDOWN) {
+                const remaining = Math.ceil((UPDATE_COOLDOWN - (currentTime - lastUpdateTime)) / 60000);
+                showNotification(`कृपया ${remaining} मिनट बाद फिर प्रयास करें।`, 'info');
+                return;
+            }
+            
+            lastUpdateTime = currentTime;
+
+            if (!currentUser.latitude || !currentUser.longitude || currentUser.location === 'स्थान: अनुमति का इंतजार है...' || currentUser.location.includes('(पता नहीं मिला)')) {
+                showNotification('कृपया पहले अपना सटीक स्थान एक्सेस करने की अनुमति दें।', 'error');
+                // अगर लोकेशन पेंडिंग या एरर में है, तो इसे फिर से रिक्वेस्ट करने का विकल्प दें
+                if (locationPermissionBtn.style.display === 'none') {
+                    locationPermissionBtn.style.display = 'block';
+                    locationPermissionBtn.innerHTML = '<i class="fas fa-location-arrow"></i> लोकेशन एक्सेस दें';
+                    locationPermissionBtn.disabled = false;
+                }
+                return;
+            }
+
+            powerOnBtn.disabled = true;
+            powerOffBtn.disabled = true;
+            powerOnBtn.innerHTML = status === 'ON' ? '<div class="spinner"></div> अपडेट हो रहा है...' : '<i class="fas fa-bolt"></i> बिजली आ गई';
+            powerOffBtn.innerHTML = status === 'OFF' ? '<div class="spinner"></div> अपडेट हो रहा है...' : '<i class="fas fa-power-off"></i> बिजली चली गई';
+            
+            const timestamp = new Date().toLocaleString('en-IN', {
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                hour12: true
+            }).replace(',', ''); // Remove comma for cleaner display
+            const statusData = {
+                status: status,
+                locationDisplay: currentUser.location, // अपडेटेड लोकेशन यहां उपयोग करें
+                latitude: currentUser.latitude,
+                longitude: currentUser.longitude,
+                timestamp: timestamp,
+                userId: currentUser.userId,
+                userName: currentUser.name,
+                userMobile: currentUser.mobile
+            };
+            
+            statusUpdates.unshift(statusData);
+            // केवल नवीनतम 100 अपडेट्स रखें
+            if (statusUpdates.length > 100) {
+                statusUpdates = statusUpdates.slice(0, 100);
+            }
+            localStorage.setItem('powerAppStatus', JSON.stringify(statusUpdates));
+            
+            updateStatusUI();
+            
+            const statusText = status === 'ON' ? 'आ गई ✅' : 'चली गई ❌';
+            
+            // Telegram मैसेज में पूरा पता भेजें
+            const statusMessage = `⚡️ <b>बिजली अपडेट</b>\n` +
+                                 `👤 <b>यूजर:</b> ${currentUser.name}\n` +
+                                 `📱 <b>मोबाइल:</b> ${currentUser.mobile}\n` +
+                                 `📍 <b>स्थान:</b> ${currentUser.location}\n` + // यहां भी पूरा पता
+                                 `🔌 <b>स्थिति:</b> ${statusText}\n` +
+                                 `🕒 <b>समय:</b> ${timestamp}`;
+            
+            showNotification(`बिजली स्थिति अपडेट की गई: ${statusText.replace(' ✅', '').replace(' ❌', '')}`, 'success');
+
+            // Telegram पर अपडेट भेजें
+            await sendToTelegram(statusMessage, status); 
+
+            setTimeout(() => {
+                powerOnBtn.disabled = false;
+                powerOffBtn.disabled = false;
+                powerOnBtn.innerHTML = '<i class="fas fa-bolt"></i> बिजली आ गई';
+                powerOffBtn.innerHTML = '<i class="fas fa-power-off"></i> बिजली चली गई';
+            }, 500); // UI को जल्दी से रिसेट करें
+        }
+        
+        // Load status updates from localStorage
+        function loadStatusUpdates() {
+            const savedUpdates = localStorage.getItem('powerAppStatus');
+            if (savedUpdates) {
+                try {
+                    statusUpdates = JSON.parse(savedUpdates);
+                } catch (e) {
+                    console.error('Error parsing status updates:', e);
+                    statusUpdates = [];
+                }
+            } else {
+                statusUpdates = []; 
+            }
+            updateStatusUI();
+        }
+        
+        // Update status UI
+        function updateStatusUI() {
+            // हम सभी अपडेट्स दिखा रहे हैं, लोकेशन के आधार पर फ़िल्टर नहीं कर रहे
+            const localUpdates = statusUpdates;
+
+            if (localUpdates.length === 0) {
+                statusUpdatesElement.innerHTML = `
+                    <div class="no-updates">
+                        <i class="fas fa-info-circle" style="font-size: 24px; margin-bottom: 10px;"></i>
+                        <p>कोई अपडेट उपलब्ध नहीं है</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let updatesHTML = '';
+            
+            localUpdates.forEach((item, index) => {
+                if (index > 4) return; // केवल नवीनतम 5 अपडेट दिखाएं
+                
+                const statusClass = item.status === 'ON' ? 'status-on' : 'status-off';
+                const statusIcon = item.status === 'ON' ? 'fa-bolt' : 'fa-power-off';
+                const statusText = item.status === 'ON' ? 'बिजली आ गई' : 'बिजली चली गई';
+                
+                updatesHTML += `
+                    <div class="status-card ${statusClass}">
+                        <div class="status-icon">
+                            <i class="fas ${statusIcon}"></i>
+                        </div>
+                        <div class="status-content">
+                            <div class="status-location">${item.locationDisplay || 'अज्ञात स्थान'}</div>
+                            <div class="status-message">${statusText}</div>
+                        </div>
+                        <div class="status-time">${item.timestamp}</div>
+                    </div>
+                `;
+            });
+            
+            statusUpdatesElement.innerHTML = updatesHTML;
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 
+                                 type === 'error' ? 'fa-exclamation-circle' : 
+                                 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            requestAnimationFrame(() => {
+                notification.classList.add('show');
+            });
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                notification.addEventListener('transitionend', () => notification.remove(), { once: true });
+            }, 3500); 
+        }
+        
+        // Show privacy policy
+        function showPrivacyPolicy(e) {
+            e.preventDefault();
+            alert("गोपनीयता नीति:\n\n1. आपका व्यक्तिगत डेटा (नाम, मोबाइल नंबर, यूजर आईडी, प्रोफाइल फोटो) आपके डिवाइस के लोकल स्टोरेज में सुरक्षित रखा जाता है।\n2. मोबाइल नंबर का उपयोग OTP सत्यापन और Telegram अपडेट के लिए किया जाता है।\n3. लोकेशन डेटा (अक्षांश और देशांतर) का उपयोग केवल बिजली स्थिति अपडेट के लिए किया जाता है और यह सीधे आपके डिवाइस से प्राप्त किया जाता है।\n4. बिजली की स्थिति और आपकी पहचान संबंधी जानकारी (नाम, मोबाइल, यूजर आईडी, लोकेशन) आपके द्वारा दिए गए Telegram बॉट पर भेजी जाती है ताकि अपडेट साझा किए जा सकें।\n5. हम आपका डेटा किसी तीसरे पक्ष के साथ साझा या बेचते नहीं हैं।");
+        }
+
+        // Handle Logout
+        function handleLogout() {
+            localStorage.removeItem('powerAppUser');
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('powerAppStatus'); // स्टेटस भी क्लियर करें
+            localStorage.removeItem('pendingUpdates'); // पेंडिंग अपडेट्स भी क्लियर करें
+            currentUser = {
+                name: '',
+                mobile: '',
+                location: 'स्थान: अनुमति का इंतजार है...',
+                latitude: null,
+                longitude: null,
+                userId: '',
+                profilePicture: null,
+                authToken: null
+            };
+            statusUpdates = [];
+            showLoginSection();
+            showNotification('आप सफलतापूर्वक लॉगआउट हो गए हैं।', 'info');
+        }
+
+        // Handle Profile Save
+        async function handleProfileSave() {
+            const newName = editUserNameInput.value.trim();
+            const newMobile = editMobileNumberInput.value.trim();
+
+            if (!newName || !newMobile) {
+                showNotification('कृपया नाम और मोबाइल नंबर दर्ज करें।', 'error');
+                return;
+            }
+
+            if (!/^[a-zA-Zअ-ह\s]{3,}$/.test(newName)) {
+                showNotification('कृपया वैध नाम दर्ज करें (केवल अक्षर और रिक्त स्थान, कम से कम 3 वर्ण)।', 'error');
+                return;
+            }
+            
+            if (!/^[6-9]\d{9}$/.test(newMobile)) {
+                showNotification('कृपया वैध 10-अंकीय मोबाइल नंबर दर्ज करें (6,7,8,9 से शुरू)।', 'error');
+                return;
+            }
+
+            if (newName === currentUser.name && newMobile === currentUser.mobile) {
+                showNotification('कोई बदलाव नहीं हुआ।', 'info');
+                showAppSection();
+                return;
+            }
+
+            saveProfileBtn.disabled = true;
+            saveProfileBtn.innerHTML = '<div class="spinner"></div> सेव किया जा रहा है...';
+
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                currentUser.name = newName;
+                currentUser.mobile = newMobile;
+                localStorage.setItem('powerAppUser', JSON.stringify(currentUser));
+                
+                showNotification('प्रोफाइल सफलतापूर्वक अपडेट की गई!', 'success');
+                showAppSection(); 
+
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                showNotification('प्रोफाइल सेव करने में त्रुटि हुई।', 'error');
+            } finally {
+                saveProfileBtn.disabled = false;
+                saveProfileBtn.innerHTML = '<i class="fas fa-save"></i> प्रोफाइल सेव करें';
+            }
+        }
+
+        // Telegram पर मैसेज भेजने का वास्तविक फ़ंक्शन
+        async function sendToTelegram(message, type, isPending = false) {
+            // Validate Telegram credentials
+            if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+                console.error('Telegram Bot Token or Chat ID is missing.');
+                if (!isPending) {
+                    showNotification('टेलीग्राम कॉन्फ़िगरेशन त्रुटि: बॉट टोकन या चैट आईडी गुम है।', 'error');
+                }
+                return false; // Indicate failure
+            }
+
+            if (!isOnline) {
+                // अगर ऑफ़लाइन है, तो अपडेट को लोकल स्टोरेज में सहेजें
+                const pendingUpdates = JSON.parse(localStorage.getItem('pendingUpdates') || '[]');
+                pendingUpdates.push({ message, type });
+                localStorage.setItem('pendingUpdates', JSON.stringify(pendingUpdates));
+                if (!isPending) { // केवल पहली बार जब ऑफ़लाइन होता है, तब नोटिफिकेशन दिखाएं
+                   showNotification('आप ऑफ़लाइन हैं। अपडेट बाद में भेजे जाएंगे।', 'info');
+                }
+                return false; // Indicate failure (will be sent later)
+            }
+
+            const telegramApiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            const payload = {
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message,
+                parse_mode: 'HTML' // ताकि bold टैग काम करें
+            };
+
+            try {
+                const response = await fetch(telegramApiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Telegram API error response:', errorData); // Log the full error response
+                    let errorMessage = errorData.description || `स्थिति: ${response.status}`;
+                    if (errorData.error_code === 400 && errorData.description.includes("chat not found")) {
+                        errorMessage = "टेलीग्राम चैट आईडी गलत है या बॉट को चैट में जोड़ा नहीं गया है।";
+                    } else if (errorData.error_code === 401) {
+                        errorMessage = "टेलीग्राम बॉट टोकन अमान्य है।";
+                    }
+                    if (!isPending) {
+                       showNotification(`टेलीग्राम पर अपडेट भेजने में विफल: ${errorMessage}`, 'error');
+                    }
+                    return false; // Indicate failure
+                } else {
+                    console.log('Telegram पर अपडेट सफलतापूर्वक भेजा गया!');
+                    return true; // Indicate success
+                }
+            } catch (error) {
+                console.error('टेलीग्राम पर अपडेट भेजते समय नेटवर्क त्रुटि या अन्य त्रुटि:', error);
+                if (!isPending) {
+                    showNotification('टेलीग्राम पर अपडेट भेजने में नेटवर्क त्रुटि।', 'error');
+                }
+                return false; // Indicate failure
+            }
+        }
+    
+        // Initialize app when page loads
+        window.addEventListener('DOMContentLoaded', initApp);
+        
+        // Global error handling
+        window.addEventListener('error', function(event) {
+            console.error('Unhandled error:', event.error);
+            showNotification('अनपेक्षित त्रुटि हुई। कृपया पेज रिफ्रेश करें।', 'error');
+        });
+        
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Unhandled promise rejection:', event.reason);
+            showNotification('सिस्टम त्रुटि हुई। कृपया पुनः प्रयास करें।', 'error');
+        });
+    </script>
+</body>
+</html>
