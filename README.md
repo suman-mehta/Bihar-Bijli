@@ -1,2 +1,0 @@
-# Bihar-Bijli
-Bihar Bijli
